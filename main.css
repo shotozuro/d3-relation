@@ -1,0 +1,29 @@
+input {
+  height: 30px;
+  width: 130px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+button {
+  height: 35px;
+  padding: 10px;
+}
+
+.node circle {
+  cursor: pointer;
+  stroke: #a0d1f3;
+  stroke-width: 1.5px;
+}
+
+.node text {
+  font: 12px "Monaco";
+  pointer-events: none;
+  text-anchor: middle;
+}
+
+line.link {
+  fill: none;
+  stroke: #062d42;
+  stroke-width: 1.5px;
+}

