@@ -1,4 +1,4 @@
-document.getElementById("submit").addEventListener("click", onSubmit)
+// document.getElementById("submit").addEventListener("click", onSubmit)
 
 const width = window.outerWidth * 0.8,
     height = window.outerHeight * 0.8,
@@ -24,21 +24,50 @@ function setLinkDistance (d) {
   return d.source.nama === selectedUser.nama ? 180 : 60
 }
 
-function onSubmit () {
-  const name = document.getElementById("nama").value
-  findRelation(name)
+function onSubmit (e) {
+  const name = e.target.value
+  const users = [...database]
+  findRelation(name, users)
+}
+
+function renderSelectBox (users) {
+  const mainEl = document.getElementById("main")
+  mainEl.innerHTML = ""
+  if (users.length > 0) {
+    const selectEl = document.createElement("select")
+    selectEl.setAttribute("id", "nama")
+    selectEl.addEventListener("change", onSubmit)
+
+    const defOpt = document.createElement("option")
+    defOpt.appendChild(document.createTextNode("Select Name"))
+    selectEl.appendChild(defOpt)
+    users.forEach(user => {
+      const opt = document.createElement("option")
+      opt.appendChild(document.createTextNode(user.nama))
+      opt.setAttribute("value", user.nama.toLowerCase())
+      selectEl.appendChild(opt)
+    })
+    mainEl.appendChild(selectEl)
+  }
 }
 
 // set database
 d3.json("relation.json", function (error, json) {
-  if (error) console.log(error)
+  if (error) {
+    renderErrorMessage("Failed to fetch data")
+  } else {
+    database = json
+    renderSelectBox(json)
+  }
+})
 
-  database = json
-});
+function renderErrorMessage (message) {
+  document.getElementById("error").innerText = message
+}
 
 
-function findRelation (name) {
-  const users = [...database]
+function findRelation (name, users) {
+//   const users = [...database]
   selectedUser = users.find(user => user.nama.toLowerCase() === name.toLowerCase())
   if (!selectedUser) {
       console.log("user not found")
@@ -54,7 +83,7 @@ function findRelation (name) {
   Object.keys(selectedUser).forEach((key, index) => {
       const childKeys = ["job", "hobi", "status", "stack", "daerah", "sekolah", "kuliah"]
       if (childKeys.includes(key)) {
-          const child = { nama: selectedUser[key], size: circleSize / 2, children: filterUsersByKey(key, selectedUser)}
+          const child = { nama: selectedUser[key], size: circleSize / 2, children: filterUsersByKey(key, selectedUser, users)}
           graph = {...graph, children: [...graph.children, child]}
       }
   })
@@ -62,8 +91,8 @@ function findRelation (name) {
   update();
 }
 
-function filterUsersByKey (key, selectedUser) {
-  const users = [...database]
+function filterUsersByKey (key, selectedUser, users) {
+//   const users = [...database]
   return users.filter(user => user[key] === selectedUser[key] && user["nama"] !== selectedUser["nama"])
     .map(user => {
       let obj = { id: user.id, nama: user.nama }
@@ -75,7 +104,7 @@ function update() {
   let nodes = flatten(root),
       links = d3.layout.tree().links(nodes);
   // Restart the force layout.
-  console.log({nodes, links})
+  // console.log({nodes, links})
   force
       .nodes(nodes)
       .links(links)
